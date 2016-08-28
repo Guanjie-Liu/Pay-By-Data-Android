@@ -1,0 +1,384 @@
+31/05/2016
+-----------------------------------------------------------------------
+ubuntu 16.04 LTS
+java version "1.6.0_18"
+make 3.81
+
+java was downloaded from oracle, then removed openjdk, then update the
+softlink:
+(for java, javac, jar)
+sudo update-alternatives --install ""/usr/bin/java" "java" "/home/jack/Java/jdk1.6.0_18/bin/jar" 1
+sudo update-alternatives --config java
+
+make version 4.1->3.81:
+download the make 3.81 package.
+sudo dpkg -i make*.deb
+
+Problems: Error 41, probably something to do with Java.
+
+
+Problem fixed !!!!!!!!!!!!!
+Solution:
+1. delete all java installed.
+2. install java-6-oracle from following the instruction by this link:
+https://www.digitalocean.com/community/tutorials/how-to-install-java-with-apt-get-on-ubuntu-16-04
+3. 
+before running: . build/envsetup.sh
+run: export JAVA_HOME=/usr/lib/jvm/java-6-oracle
+(because in the envsetup.sh file, if JAVA_HOME is not set, it will default it to
+/usr/lib/jvm/java-6-sun, which is not right)
+
+Problems: xmllint: command not found  
+make: *** [out/target/product/generic/system/etc/apns-conf.xml] Error 127
+
+Solution: install xmllint : sudo apt-get install libxml2-utils
+
+Problems: build freeze when installing libwebviewchromium.so
+-------------------------------------------------------------
+Install: out/target/product/generic/system/bin/dex2oat
+    
+^Cmake: *** Deleting file `out/target/product/generic/obj/SHARED_LIBRARIES/libwebviewchromium_intermediates/LINKED/libwebviewchromium.so'
+make: *** [out/target/product/generic/obj/SHARED_LIBRARIES/libwebviewchromium_intermediates/LINKED/libwebviewchromium.so] Interrupt
+-------------------------------------------------------------
+possible cause: not enough swap space, so I added 2G of swap space.
+
+https://www.digitalocean.com/community/tutorials/how-to-add-swap-space-on-ubuntu-16-04
+
+change the swap priority by editing the /etc/fstab file:
+/swapfile non swap defaults,pri=10 0 0
+
+===========================================================================================
+==> build freezing problems cant be fixed, so reinstall to ubuntu 12.04.
+first need to delete the ubuntu 16.04:
+http://jingyan.baidu.com/article/295430f13ed7d80c7e005088.html
+
+then install ubuntu 12.04(choose install alongside with windows):
+http://jingyan.baidu.com/article/60ccbceb18624464cab197ea.html
+To make reboot from the usb, restart computer and press f2 when vaio sign shows up. then enable boot from external device,
+set boot from external device as priority. save changes and restart.
+After installing ubuntu, finish all the updates. Then we can start getting ASOP by following the official instructions online.
+
+< android-2.3.4_r1 >
+->Problem:
+frameworks/base/libs/utils/RefBase.cpp:483:67: error: passing ‘const android::RefBase::weakref_impl’ as ‘this’ argument of ‘void android::RefBase::weakref_impl::trackMe(bool, bool)’ discards qualifiers [-fpermissive]
+make: *** [out/host/linux-x86/obj/STATIC_LIBRARIES/libutils_intermediates/RefBase.o] Error 1
+make: *** Waiting for unfinished jobs....
+
+Solution: open a terminal and run (assuming you are in the folder android):
+gedit frameworks/base/libs/utils/Android.mk
+
+Change the line:
+LOCAL_CFLAGS += -DLIBUTILS_NATIVE=1 $(TOOL_CFLAGS)
+To:
+LOCAL_CFLAGS += -DLIBUTILS_NATIVE=1 $(TOOL_CFLAGS) -fpermissive
+
+->Problem:
+make: *** [out/host/linux-x86/obj/EXECUTABLES/obbtool_intermediates/Main.o] error 1
+
+solution:
+gedit build/core/combo/HOST_linux-x86.mk
+add -U_FORTIFY_SOURCE before -D_FORTIFY_SOURCE=0
+making it to: HOST_GLOBAL_CFLAGS += -U_FORTIFY_SOURCE -D_FORTIFY_SOURCE=0
+
+< android-4.2_r1 >
+build is successfull.
+
+====================================================================================================
+< android-4.4.1_r1 >
+build was successful, but after flashing, the tablet stuck on the google icon during reboot.
+
+Attempt to restore it to factory state, using android 5.1.1 (LMY47V) image.
+successful and reboot is fine.
+
+try to build version 5 targeting the device, to validate the building tools actually work. 
+< android-5.1.1_r16>
+
+For Nenux 7 Mobile version(2012):
+code name: razorg(deb)
+build configuration: aosp_deb-userdebug
+
+-> Problem:
+arm-linux-androideabi-g++: internal compiler error: Killed (program cc1plus)
+Please submit a full bug report,
+with preprocessed source if appropriate.
+See <http://source.android.com/source/report-bugs.html> for instructions.
+make: *** [out/target/product/deb/obj/STATIC_LIBRARIES/third_party_WebKit_Source_core_webcore_dom_gyp_intermediates/third_party/WebKit/Source/core/dom/Document.o] Error 4
+make: *** Deleting file `out/target/product/deb/obj/STATIC_LIBRARIES/third_party_WebKit_Source_core_webcore_dom_gyp_intermediates/third_party/WebKit/Source/core/dom/Document.o'
+make: *** Waiting for unfinished jobs....
+
+#### make failed to build some targets (19:17:10 (hh:mm:ss)) ####
+
+Solutions:
+May be due to not enough memory, the system became super slow during compilation, so it could be a possible reason.
+Try use make -j4 instead make -j16
+
+build was successful, but flashing is not:
+jack@jack-VPCCA37EC:~/android-5.1.1_r16$ fastboot -w flashall
+Creating filesystem with parameters:
+    Size: 28521246720
+    Block size: 4096
+    Blocks per group: 32768
+    Inodes per group: 8176
+    Inode size: 256
+    Journal blocks: 32768
+    Label: 
+    Blocks: 6963195
+    Block groups: 213
+    Reserved block group size: 1024
+Created filesystem with 11/1741488 inodes and 153337/6963195 blocks
+Creating filesystem with parameters:
+    Size: 587202560
+    Block size: 4096
+    Blocks per group: 32768
+    Inodes per group: 7168
+    Inode size: 256
+    Journal blocks: 2240
+    Label: 
+    Blocks: 143360
+    Block groups: 5
+    Reserved block group size: 39
+Created filesystem with 11/35840 inodes and 4616/143360 blocks
+--------------------------------------------
+Bootloader Version...: FLO-04.05
+Baseband Version.....: DEB-Z00_2.44.0_0213
+Serial Number........: 0a6aa917
+--------------------------------------------
+checking product...
+OKAY [  0.003s]
+sending 'boot' (7258 KB)...
+OKAY [  0.234s]
+writing 'boot'...
+OKAY [  0.255s]
+sending 'recovery' (7862 KB)...
+OKAY [  0.254s]
+writing 'recovery'...
+OKAY [  0.297s]
+erasing 'system'...
+OKAY [  0.124s]
+sending 'system' (296327 KB)...
+OKAY [  9.293s]
+writing 'system'...
+OKAY [ 13.542s]
+erasing 'userdata'...
+OKAY [  2.868s]
+sending 'userdata' (139065 KB)...
+OKAY [  4.369s]
+writing 'userdata'...
+OKAY [  5.614s]
+erasing 'cache'...
+OKAY [  0.076s]
+sending 'cache' (10984 KB)...
+OKAY [  0.353s]
+writing 'cache'...
+OKAY [  0.522s]
+rebooting...
+
+finished. total time: 37.973s
+
+rebooting got stuck on the google logo again!!!!
+
+--------------------------------------------------------------------------------------
+Solution:
+AOSP cannot be used from pure source code only and requires additional hardware-related proprietary libraries to run, specifically for hardware graphics acceleration. 
+need to intall the proprietary binaries before building the system, download the binaries from:
+https://developers.google.com/android/nexus/drivers
+extract them and put them into the root of the source code of AOSP, then ./youscript to extract the binaries.
+
+=================================================================================================
+Objective: Get familiar with Android App Development
+
+Note: when multiple java versions are installed, click file->Project Structure, to select the right JDK location
+
+Changing the default java version:
+sudo  update-java-alternatives --set [JDK/JRE name e.g. java-8-oracle]
+
+----------------------
+<Build a very simple app with no activity>
+when testing app on a device,
+Problem:
+06/16 00:32:00: Launching app
+$ adb push /home/jack/AndroidStudioProjects/MyApplication2/app/build/outputs/apk/app-debug.apk /data/local/tmp/com.example.jack.myapplication2
+com.android.ddmlib.AdbCommandRejectedException: insufficient permissions for device
+Error while Installing APK
+-----------------------
+https://developer.android.com/studio/run/device.html
+instructions from this website was followed, but the problem is still not fixed.
+
+=================================================================================================
+Objective: merge Karun's PBD implementation into the AOSP source code, and get a trial run.
+
+Using android-4.4.3_r1 KTU84L
+
+Setting up ccache: 
+put:
+export USE_CCACHE=1
+into ~./bashrc file
+
+On Linux, you can watch ccache being used by doing the following:
+watch -n1 -d prebuilts/misc/linux-x86/ccache/ccache -s
+------------------------------------------------------------------------------------------
+Errors occurs when adding HelloWorld app generated by Android Studio. might due to different build environment between
+android studio and my ROM. Compile ok when use Hello app from Karun's files.
+
+adb logcat
+adb logcat -b system // for Slog
+
+================================================================================================
+adb: https://wiki.cyanogenmod.org/w/UDEV
+
+adb can be used to push a built app (apk) onto the device, some setup is required(use the link above).
+
+Run adb as root user and push apk: 
+adb root
+adb remount
+//navigate to the folder of the apk on your computer
+adb push Hello.apk /system/app/
+adb shell chmod 644 /system/app/Hello.apk
+adb reboot
+
+==============================================================================================
+Problems:
+I/SystemServer(  602): Starting Demo Service
+E/SystemServer(  602): Failure starting DemoService Service
+E/SystemServer(  602): java.lang.SecurityException
+
+Solutions:
+first method in the link below works for me.
+http://androidosp.blogspot.co.uk/2014/11/selinux-seandroid-exceptions-for-system.html
+
+===============================================================================================
+
+E/        (  188): invalid crash request of size 4 (from pid=206 uid=0)
+W/qcom_sensors_hal(  607): hal_sensor1_data_cb: SENSOR1_MSG_TYPE_BROKEN_PIPE
+E/Sensors ( 1813): sns_fsa_la.c(386):fsa: fflush failed, 9
+E/Sensors ( 1813): sns_fsa_la.c(386):fsa: fflush failed, 9
+W/Sensors ( 1813): sns_smr_la.c(446):smr_la: smr_apps_la_thread_main is starting, fd=12, sns_smr.en_rx_msg_ptr=b6f919d0
+W/Sensors ( 1813): sns_sam_app.c(6827):sns_sam_reg_algo: Registering algo service 16, err 0
+E/Sensors ( 1813): sns_debug_main.c(565):Debug Config File missing in EFS!
+----------------------------
+W/LocationManagerService(  609): no network location provider found
+E/LocationManagerService(  609): no geocoder provider found
+E/LocationManagerService(  609): Unable to bind FusedProxy.
+E/LocationManagerService(  609): Unable to bind FLP Geofence proxy.
+E/LocationManagerService(  609): Hardware Activity-Recognition not supported.
+
+!! GPS signal can not be received indoors! so go out to test the device!
+
+=============================================================================================
+sync_gateway and couchbase will be started automatically after installation, and will start
+automatically everytime the system is turned on.
+
+sudo dpkg -i [couchbase-server.deb/sync_gateway.deb] // to install the package.
+sudo dpkg -r couchbase-sync-gateway                  //to completely uninstall
+
+top (to check the runnign process)
+sudo service coucebase-server start/stop
+sudo service sync_gateway start/stop
+
+For openning couchbase server console:
+http://jack-vpcca37ec/8091
+
+couchbase installed:
+-----------------------------------------------------------------------------------
+jack@jack-VPCCA37EC:~/Downloads$ sudo dpkg -i couchbase-server-enterprise_4.5.0-ubuntu12.04_amd64.deb 
+Selecting previously unselected package couchbase-server.
+(Reading database ... 273037 files and directories currently installed.)
+Unpacking couchbase-server (from couchbase-server-enterprise_4.5.0-ubuntu12.04_amd64.deb) ...
+libssl1.0.0 is installed. Continue installing
+Warning: Transparent hugepages looks to be active and should not be.
+Please look at http://bit.ly/1ZAcLjD as for how to PERMANENTLY alter this setting.
+Warning: Swappiness is not set to 0.
+Please look at http://bit.ly/1k2CtNn as for how to PERMANENTLY alter this setting.
+Minimum RAM required  : 4 GB
+System RAM configured : 3.84 GB
+
+Minimum number of processors required : 4 cores
+Number of processors on the system    : 4 cores
+Setting up couchbase-server (4.5.0-2601-1) ...
+ * Started couchbase-server
+
+You have successfully installed Couchbase Server.
+Please browse to http://jack-VPCCA37EC:8091/ to configure your server.
+Please refer to http://couchbase.com for additional resources.
+
+Please note that you have to update your firewall configuration to
+allow connections to the following ports:
+4369, 8091 to 8094, 9100 to 9105, 9998, 9999, 11209 to 11211,
+11214, 11215, 18091 to 18093, and from 21100 to 21299.
+
+By using this software you agree to the End User License Agreement.
+See /opt/couchbase/LICENSE.txt.
+
+Processing triggers for ureadahead ...
+-----------------------------------------------------------------------------------
+
+sync_gateway installed:
+-----------------------------------------------------------------------------------
+jack@jack-VPCCA37EC:~$ sudo dpkg -i couchbase-sync-gateway-enterprise_1.2.1-4_x86_64.deb 
+(Reading database ... 276804 files and directories currently installed.)
+Preparing to replace couchbase-sync-gateway 1.2.1-4 (using couchbase-sync-gateway-enterprise_1.2.1-4_x86_64.deb) ...
+sync_gateway: unrecognized service
+Unpacking replacement couchbase-sync-gateway ...
+Setting up couchbase-sync-gateway (1.2.1-4) ...
+sync_gateway start/running, process 6869
+
+You have successfully installed Couchbase Sync Gateway.
+
+You can find sample sync_gateway configuration files in the /opt/couchbase-sync-gateway/examples folder.
+
+You can control the Couchbase Sync Gateway service by using the following command:
+
+  service sync_gateway start
+
+That's it! Sync Gateway is now running on port 4984. We've setup a simple in-memory database
+which works great for exploring Sync Gateway's capabilities. A limited console is available
+by opening your browser to http://localhost:4985/_admin/.
+
+The command-line options are:
+
+  -adminInterface=":4985": Address to bind admin interface to
+  -bucket="sync_gateway": Name of bucket
+  -dbname="": Name of CouchDB database (defaults to name of bucket)
+  -interface=":4984": Address to bind to
+  -log="": Log keywords, comma separated
+  -personaOrigin="": Base URL that clients use to connect to the server
+  -pool="default": Name of pool
+  -pretty=false: Pretty-print JSON responses
+  -url="walrus:": Address of Couchbase server
+  -verbose=false: Log more info about requests
+
+
+By using this software you agree to the End User License Agreement.
+See /opt/couchbase-sync-gateway/LICENSE.txt.
+----------------------------------------------------------------------------------
+
+use http instead of https
+
+-----------------------------------------------------------------------------
+Problems:
+continuous replication can not detect the changes in database.
+https://github.com/couchbase/couchbase-lite-java-core/issues/258
+
+
+--------------------------------------------------------------------------
+DPA is put in to /data/data directory because it's permission belongs to system.
+
+To use TimingLogger, system property needs to be set
+http://stackoverflow.com/questions/3128181/time-code-execution-in-android
+
+To check the cpu usage
+http://stackoverflow.com/questions/10074254/how-to-calculate-power-consumption-of-android-app
+
+==============================================================================
+after compiling a custom sdk from aosp, point android studio to this sdk path.
+go to the custom sdk directory, enter subfolder called platforms,
+change the subfolder's name to android-<api level>, <api-level> being your sdk api level.
+Example: android-21.
+
+Create a new project, then update build.Gradle(Module:app) file:
+update compileSdkVersion & targetSdkVersion to the custom sdk api level.
+update the support library in the dependencies block to a version that matched the compileSdkVersion.
+
+
+ 
+
