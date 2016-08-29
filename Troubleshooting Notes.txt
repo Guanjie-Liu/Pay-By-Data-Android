@@ -379,6 +379,9 @@ Create a new project, then update build.Gradle(Module:app) file:
 update compileSdkVersion & targetSdkVersion to the custom sdk api level.
 update the support library in the dependencies block to a version that matched the compileSdkVersion.
 
+========================================================================
+android uid and pid security system(in chinese):
+http://blog.csdn.net/vshuang/article/details/43639211
 
  
 
