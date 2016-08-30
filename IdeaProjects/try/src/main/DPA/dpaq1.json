@@ -1,0 +1,11 @@
+{
+  "Collector_Id": "UCL_DataScience",
+  "Type": "Location",
+  "Accuracy": 100,
+  "Time_start": 1401466076000,
+  "Time_end": 14791613655000,
+  "Latitude_start": 51,
+  "Latitude_end": 51.9,
+  "Longitude_start": -0.20,
+  "Longitude_end": -0.15
+}

@@ -1,0 +1,13 @@
+<component name="libraryTable">
+  <library name="Maven: com.couchbase.client:core-io:1.2.0-dp">
+    <CLASSES>
+      <root url="jar://$MAVEN_REPOSITORY$/com/couchbase/client/core-io/1.2.0-dp/core-io-1.2.0-dp.jar!/" />
+    </CLASSES>
+    <JAVADOC>
+      <root url="jar://$MAVEN_REPOSITORY$/com/couchbase/client/core-io/1.2.0-dp/core-io-1.2.0-dp-javadoc.jar!/" />
+    </JAVADOC>
+    <SOURCES>
+      <root url="jar://$MAVEN_REPOSITORY$/com/couchbase/client/core-io/1.2.0-dp/core-io-1.2.0-dp-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>

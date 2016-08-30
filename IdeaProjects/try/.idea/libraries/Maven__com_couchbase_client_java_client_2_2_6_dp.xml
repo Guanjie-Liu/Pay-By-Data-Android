@@ -1,0 +1,13 @@
+<component name="libraryTable">
+  <library name="Maven: com.couchbase.client:java-client:2.2.6-dp">
+    <CLASSES>
+      <root url="jar://$MAVEN_REPOSITORY$/com/couchbase/client/java-client/2.2.6-dp/java-client-2.2.6-dp.jar!/" />
+    </CLASSES>
+    <JAVADOC>
+      <root url="jar://$MAVEN_REPOSITORY$/com/couchbase/client/java-client/2.2.6-dp/java-client-2.2.6-dp-javadoc.jar!/" />
+    </JAVADOC>
+    <SOURCES>
+      <root url="jar://$MAVEN_REPOSITORY$/com/couchbase/client/java-client/2.2.6-dp/java-client-2.2.6-dp-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>

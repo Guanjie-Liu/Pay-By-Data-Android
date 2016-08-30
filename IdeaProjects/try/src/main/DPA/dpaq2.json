@@ -1,0 +1,11 @@
+{
+  "Collector_Id": "IC_DataScience",
+  "Type": "Location",
+  "Accuracy": 10,
+  "Time_start": 1471466076000,
+  "Time_end": 1471713655000,
+  "Latitude_start": 51.49,
+  "Latitude_end": 51.50,
+  "Longitude_start": -0.18,
+  "Longitude_end": -0.17
+}

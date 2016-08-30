@@ -1,0 +1,11 @@
+<component name="ArtifactManager">
+  <artifact type="jar" name="try:jar">
+    <output-path>$PROJECT_DIR$/out/artifacts/try_jar</output-path>
+    <root id="archive" name="try.jar">
+      <element id="module-output" name="try" />
+      <element id="extracted-dir" path="$MAVEN_REPOSITORY$/io/reactivex/rxjava/1.0.15/rxjava-1.0.15.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$MAVEN_REPOSITORY$/com/couchbase/client/core-io/1.2.6-dp/core-io-1.2.6-dp.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$MAVEN_REPOSITORY$/com/couchbase/client/java-client/2.2.6-dp/java-client-2.2.6-dp.jar" path-in-jar="/" />
+    </root>
+  </artifact>
+</component>

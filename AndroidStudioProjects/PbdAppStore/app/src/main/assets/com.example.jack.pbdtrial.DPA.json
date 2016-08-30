@@ -1,0 +1,37 @@
+{
+  "AppId":"com.example.jack.pbdtrial",
+  "Duration": 100,
+  "Replication": "granted",
+  "Location":
+  {
+    "finelocation":
+    {
+      "Frequency":100
+    },
+    "coarselocation":
+    {
+      "Frequency":100
+    }
+  },
+  "Identifier":
+  {
+    "DeviceId":"granted",
+    "SimSerialNumber":"granted",
+    "AndroidId":"granted",
+    "GroupIdLevel1":"granted",
+    "Line1Number":"granted",
+    "SubscriberId":"granted",
+    "VoiceMailAlphaTag":"granted",
+    "VoiceMailNumber":"granted"
+  },
+  "Contact":
+  {
+    "contacts":"granted",
+    "rowId":"granted",
+    "displayName":"granted",
+    "hasPhoneNumber":"granted",
+    "cdkPhoneContentUri":"granted",
+    "cdkPhoneContactId":"granted",
+    "cdkPhoneNumber":"granted"
+  }
+}
