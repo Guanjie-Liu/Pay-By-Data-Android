@@ -16,7 +16,6 @@ public class UpdateReceiver extends BroadcastReceiver {
         Log.d(TAG, "Received an intent");
         Intent serviceIntent = new Intent(context, DataUpdate.class);
         serviceIntent.setAction(intent.getExtras().getString("updateType"));
-        serviceIntent.putExtra("appid", intent.getExtras().getString("appid"));
         context.startService(serviceIntent);
     }
 }

@@ -118,9 +118,9 @@ public class DpaService extends IDpaService.Stub {
  	 * used by PBD app store to install DPA when an app is downloaded
  	 * return true if installation succeed or false otherwise;
  	 */
-	public boolean installDPA(String callerAppId, String dpa_str){
-		if(callerAppId.equals("com.imperial.jack.pbdappstore") == false){
-			Log.e(TAG, "only PbdAppStore is allowed to install DPA");
+	public boolean installDPA(String key, String dpa_str){
+		if(key.equals("pbdappstore_key123") == false){
+			Log.e(TAG, "Illegal attempt to install DPA");
 			return false;
 		}
 
@@ -150,8 +150,8 @@ public class DpaService extends IDpaService.Stub {
 			coarse_location.put("Last_Accessed","null");
 
 			// store JSON object as string in /data/data
-			String appId = dpa.getString("AppId");
-			String filepath = "/data/data/"+appId+".DPA.json";
+			String dpaKey = dpa.getString("Key");
+			String filepath = "/data/data/"+dpaKey+".DPA.json";
 
 			String new_dpa_str = dpa.toString(4);
 			writer(new_dpa_str, filepath);
@@ -169,13 +169,13 @@ public class DpaService extends IDpaService.Stub {
 			// go through the dpaList to see if the installing DPA is already recorded
 			int length = dpaList.length();
 			while(length > 0){
-				if((appId+".DPA.json").equals(dpaList.getString(length-1)))
+				if((dpaKey+".DPA.json").equals(dpaList.getString(length-1)))
 					return true;	
 				else
 					length--;	
 			}
 			// Add the name of the DPA to the dpaList
-			dpaList.put(appId+".DPA.json");
+			dpaList.put(dpaKey+".DPA.json");
 			String dpaList_str = dpaList.toString(4);
 			writer(dpaList_str, DPA_LIST);
 			Log.d(TAG, dpaList_str);
@@ -187,20 +187,39 @@ public class DpaService extends IDpaService.Stub {
 		return true;
 	}
 
-	/* readDPA
- 	 * used by central_database to read the DPA of an app
- 	 * return the dpa as string if succeed or null otherwise
+	/* readDpaList
+ 	 * used by central_database and PbdAppStore to read the DPA List in the system
+ 	 * return the list as string if succeed or null otherwise
  	 */
-	public String readDPA(String callerAppId, String dpaAppId){
-		if(callerAppId.equals("com.example.jack.newcentraldatabase") == false){
-			Log.e(TAG, "only com.example.jack.newcentraldatabase is allowed to read DPA");
-			return null;
+	public String readDpaList(String key){
+		if(key.equals("newcentraldatabase_key123") == false
+			&& key.equals("pbdappstore_key123") == false){
+			Log.e(TAG, "Illegal attempt to read DPA");
+			return "You are not allowed to read DPA List!";
 		}
 
-		String string = reader("/data/data/dpaAppId"+".DPA.json");
+		String string = reader("/data/data/dpaList.json");
 		return string;
 	}
 
+	/* readDpa
+ 	 * used by central_database and PbdAppStore to read the DPA of an app
+ 	 * return the dpa as string if succeed or null otherwise
+ 	 */
+	public String readDpa(String key, String dpaKey){
+		if(key.equals("newcentraldatabase_key123") == false
+			&& key.equals("pbdappstore_key123") == false){
+			Log.e(TAG, "Illegal attempt to read DPA");
+			return "You are not allowed to read DPA!";
+		}
+
+		String string = reader("/data/data/"+dpaKey+".DPA.json");
+		return string;
+	}
+
+
+	/* private helper function to read file into string
+	 */
 	private String reader(String filepath){
 		try{
 	     	InputStream fin = new FileInputStream(filepath);
@@ -220,7 +239,9 @@ public class DpaService extends IDpaService.Stub {
 		}
 	}
 
-	// This writer will overwrite the existing content
+	/* private helper function to write content into
+	 * file and overwrite any original content
+	 */	
 	private void writer(String content, String filepath){
 		try{
 			Writer output;

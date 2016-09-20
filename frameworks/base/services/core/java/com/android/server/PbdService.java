@@ -116,18 +116,18 @@ public class PbdService extends IPbdService.Stub {
      * the IMEI for GSM and the MEID or ESN for CDMA phones.
      */
     
-    public String getDeviceId(String appId){
+    public String getDeviceId(String key){
     	Log.i(TAG, "into getDeviceId");
     	int resultCode;
 		//Attempt authentication and return string accordingly
     	if (pbdAuthentication){
-    		resultCode = authenticateIdentifier(appId, "DeviceId");
+    		resultCode = authenticateIdentifier(key, "DeviceId");
     		if (resultCode == 1)
     			return "refused";
     		else if (resultCode == 2)
     			return "error";
     	}
-    	Log.i(TAG, "Device Id GRANTED to " + appId);
+    	Log.i(TAG, "Device Id GRANTED to " + key);
     	return tm.getDeviceId();
     }
 
@@ -137,18 +137,18 @@ public class PbdService extends IPbdService.Stub {
      * Returns the serial number of the SIM, if applicable. 
      * Return null if it is unavailable. 
      */
-	public String getSimSerialNumber(String appId){
+	public String getSimSerialNumber(String key){
 		Log.i(TAG, "into getSimSerialNumber");
 		int resultCode;
 		//Attempt authentication and return string accordingly
 		if (pbdAuthentication){
-			resultCode = authenticateIdentifier(appId, "SimSerialNumber");
+			resultCode = authenticateIdentifier(key, "SimSerialNumber");
 			if (resultCode == 1)
 				return "refused";
 			else if (resultCode == 2)
 				return "error";
 		}
-		Log.i(TAG, "Sim Serial GRANTED to " + appId);
+		Log.i(TAG, "Sim Serial GRANTED to " + key);
 		return tm.getSimSerialNumber();
 	}
 
@@ -160,18 +160,18 @@ public class PbdService extends IPbdService.Stub {
      * for the lifetime of the user's device. The value may change 
      * if a factory reset is performed on the device. 
      */
-	 public String getAndroidId(String appId){
+	 public String getAndroidId(String key){
 	 	Log.i(TAG, "into getAndroidId");
 	 	int resultCode;
 		//Attempt authentication and return string accordingly
 	 	if (pbdAuthentication){
-	 		resultCode = authenticateIdentifier(appId, "AndroidId");
+	 		resultCode = authenticateIdentifier(key, "AndroidId");
 	 		if (resultCode == 1)
 	 			return "refused";
 	 		else if (resultCode == 2)
 	 			return "error";
 	 	}
-	 	Log.i(TAG, "Android Id GRANTED to " + appId);
+	 	Log.i(TAG, "Android Id GRANTED to " + key);
 	 	return Secure.getString(mContext.getContentResolver(), Secure.ANDROID_ID);
 	 }
 
@@ -181,18 +181,18 @@ public class PbdService extends IPbdService.Stub {
      * Returns the Group Identifier Level1 for a GSM phone. 
      * Return null if it is unavailable. 
      */
-	public String getGroupIdLevel1(String appId){
+	public String getGroupIdLevel1(String key){
 		Log.i(TAG, "into getGroupIdLevel1");
 		int resultCode;
 		//Attempt authentication and return string accordingly
 		if (pbdAuthentication){
-			resultCode = authenticateIdentifier(appId, "GroupIdLevel1");
+			resultCode = authenticateIdentifier(key, "GroupIdLevel1");
 			if (resultCode == 1)
 				return "refused";
 			else if (resultCode == 2)
 				return "error";
 		}
-		Log.i(TAG, "Group Id Level 1 GRANTED to " + appId);
+		Log.i(TAG, "Group Id Level 1 GRANTED to " + key);
 		return tm.getGroupIdLevel1();
 	}
 
@@ -202,17 +202,17 @@ public class PbdService extends IPbdService.Stub {
      * Returns the Line1Number for the device. 
      * Return null if it is unavailable. 
      */
-	public String getLine1Number(String appId){
+	public String getLine1Number(String key){
 		Log.i(TAG, "into getLine1Number");
 		int resultCode;
 		if (pbdAuthentication){
-			resultCode = authenticateIdentifier(appId, "Line1Number");
+			resultCode = authenticateIdentifier(key, "Line1Number");
 			if (resultCode == 1)
 				return "refused";
 			else if (resultCode == 2)
 				return "error";
 		}
-		Log.i(TAG, "Line 1 Number GRANTED to " + appId);
+		Log.i(TAG, "Line 1 Number GRANTED to " + key);
 		return tm.getLine1Number();
 	}
 
@@ -222,18 +222,18 @@ public class PbdService extends IPbdService.Stub {
      * Returns the Subscriber Id for the device. 
      * Return null if it is unavailable. 
      */
-	public String getSubscriberId(String appId){
+	public String getSubscriberId(String key){
 		Log.i(TAG, "into getSubscriberId");
 		int resultCode;
 		//Attempt authentication and return string accordingly
 		if (pbdAuthentication){
-			resultCode = authenticateIdentifier(appId, "SubscriberId");
+			resultCode = authenticateIdentifier(key, "SubscriberId");
 			if (resultCode == 1)
 				return "refused";
 			else if (resultCode == 2)
 				return "error";
 		}
-		Log.i(TAG, "Subscriber Id granted to " + appId);
+		Log.i(TAG, "Subscriber Id granted to " + key);
 		return tm.getSubscriberId();
 	}
 
@@ -243,18 +243,18 @@ public class PbdService extends IPbdService.Stub {
      * Returns the Voicemail Alpha Tag for the device. 
      * Return null if it is unavailable. 
      */
-	public String getVoiceMailAlphaTag(String appId){
+	public String getVoiceMailAlphaTag(String key){
 		Log.i(TAG, "into getVoiceMailAlphaTag");
 		int resultCode;
 		//Attempt authentication and return string accordingly
 		if (pbdAuthentication){
-			resultCode = authenticateIdentifier(appId, "VoiceMailAlphaTag");
+			resultCode = authenticateIdentifier(key, "VoiceMailAlphaTag");
 			if (resultCode == 1)
 				return "refused";
 			else if (resultCode == 2)
 				return "error";
 		}
-		Log.i(TAG, "Voice Mail alpha tag granted to " + appId);
+		Log.i(TAG, "Voice Mail alpha tag granted to " + key);
 		return tm.getVoiceMailNumber();
 	}
 
@@ -264,18 +264,18 @@ public class PbdService extends IPbdService.Stub {
      * Returns the Voicemail Number for the device. 
      * Return null if it is unavailable. 
      */
-	public String getVoiceMailNumber(String appId){
+	public String getVoiceMailNumber(String key){
 		Log.i(TAG, "into getVoiceMailNumber");
 		int resultCode;
 		//Attempt authentication and return string accordingly
 		if (pbdAuthentication){
-			resultCode = authenticateIdentifier(appId, "VoiceMailNumber");
+			resultCode = authenticateIdentifier(key, "VoiceMailNumber");
 			if (resultCode == 1)
 				return "refused";
 			else if (resultCode == 2)
 				return "error";
 		}
-		Log.i(TAG, "Voice Mail number granted to " + appId);
+		Log.i(TAG, "Voice Mail number granted to " + key);
 		return tm.getVoiceMailNumber();
 	}
 
@@ -291,20 +291,20 @@ public class PbdService extends IPbdService.Stub {
 	* If request is legal, PbdService notifies the 
 	* app of location updates by a broadcast intent.
 	*/
-	public String requestPbdLocationUpdates(long minTime, float minDistance, String appId, String provider) {
+	public String requestPbdLocationUpdates(long minTime, float minDistance, String key, String provider) {
 		
-		Log.i(TAG, "Searching/Registering listener. appId is: " + appId);
+		Log.i(TAG, "Searching/Registering listener. key is: " + key);
 
 		//Check that location updates request is legal
 		if(pbdAuthentication){
-			int resultCode = authenticateLocationUpdates(appId, provider);
+			int resultCode = authenticateLocationUpdates(key, provider);
 			if(resultCode == 1)
 				return "refused";
 			else if (resultCode == 2)
 				return "error";
 		}
 
-		int listenerNo = registerListener(appId);  // returns the listener index in the list
+		int listenerNo = registerListener(key);  // returns the listener index in the list
 		String listenerId = listenerList.get(listenerNo).getListenerId(); // returns the unique listener id
 		String locationProvider = "none";
 
@@ -338,19 +338,19 @@ public class PbdService extends IPbdService.Stub {
 	* If request is legal, PbdService notifies the 
 	* app of the location update update by a broadcast intent.
 	*/
-	public String requestSingleUpdate(String appId, String provider){
-		Log.i(TAG, "Going to attempt to requestSingleUpdate: " + appId);
+	public String requestSingleUpdate(String key, String provider){
+		Log.i(TAG, "Going to attempt to requestSingleUpdate: " + key);
 
 		//Check that location updates request is legal
 		if(pbdAuthentication){
-			int resultCode = authenticateLocationUpdates(appId, provider);
+			int resultCode = authenticateLocationUpdates(key, provider);
 			if(resultCode == 1)
 				return "refused";
 			else if (resultCode == 2)
 				return "error";
 		}
 
-		int listenerNo = registerListener(appId);
+		int listenerNo = registerListener(key);
 		String listenerId = listenerList.get(listenerNo).getListenerId();
 		String locationProvider = "none";
 
@@ -387,8 +387,8 @@ public class PbdService extends IPbdService.Stub {
 	* with a new unique listenerId
 	* returns the index of the location listener.
 	*/
-	protected int registerListener(String appId){
-		int listenerNo = searchListenerList(appId);
+	protected int registerListener(String key){
+		int listenerNo = searchListenerList(key);
 		String listenerId;
 
 		if (listenerNo  < 0){
@@ -396,7 +396,7 @@ public class PbdService extends IPbdService.Stub {
 				// Generate listener Id and add new listener to the arraylist
 				// of location listeners
 				listenerId = newListenerId();
-				listenerList.add(new MyLocationListener(appId, listenerId));
+				listenerList.add(new MyLocationListener(key, listenerId));
 			}
 			catch (Exception e){
 				Log.e(TAG, "FAILED to create MyLocationListener");
@@ -417,11 +417,11 @@ public class PbdService extends IPbdService.Stub {
 	* Used by apps through the Pbd Location Manager Library
 	* when they receive a broadcast of a new available location update
 	*/
-	public PbdLocation getPbdLoc(String appId){
-		Log.i(TAG, "getPbdLoc with appId: " + appId);
+	public PbdLocation getPbdLoc(String key){
+		Log.i(TAG, "getPbdLoc with key: " + key);
 
 		//find listener of calling up
-		int listenerNo = searchListenerList(appId);
+		int listenerNo = searchListenerList(key);
 
 		Log.i(TAG, "Listener search returned: " + listenerNo);
 
@@ -440,13 +440,13 @@ public class PbdService extends IPbdService.Stub {
 
 			//Check that location updates request is legal
 			if(pbdAuthentication){
-				int resultCode = authenticateLocationUpdates(appId, provider);
+				int resultCode = authenticateLocationUpdates(key, provider);
 				if(resultCode != 0){ return null; }
 			}
 
 			try{
 				// reset the DPA
-				JSONObject dpa = dpaReader(appId);
+				JSONObject dpa = dpaReader(key);
 				JSONObject location = dpa.getJSONObject("Location");
 				JSONObject locationScope = location.getJSONObject(provider);
 				int used = locationScope.getInt("Used");
@@ -457,7 +457,7 @@ public class PbdService extends IPbdService.Stub {
 				Calendar calendar = Calendar.getInstance();
 				Date now = calendar.getTime();
 				locationScope.put("Last_Accessed", now.toString());
-				dpaWriter(appId, dpa);
+				dpaWriter(key, dpa);
 			}catch(Exception e){}
 			
 			if (provider.equals("finelocation")){
@@ -506,13 +506,13 @@ public class PbdService extends IPbdService.Stub {
 	* Service Method: removeLocationUpdates
 	* To be called when 
 	*/
-	public void removeLocationUpdates(String appId){
+	public void removeLocationUpdates(String key){
 
 		Log.i(TAG, "Called removeLocationUpdates onStop");
-		Log.i(TAG, "Searching for listener with appid " + appId);
+		Log.i(TAG, "Searching for listener with key " + key);
 
 		//Find listnerNo of calling app
-		int listenerNo = searchListenerList(appId);
+		int listenerNo = searchListenerList(key);
 
 		Log.i(TAG, "Listener was found at location: " + listenerNo);
 
@@ -530,7 +530,7 @@ public class PbdService extends IPbdService.Stub {
 			}
 		}
 		else{
-			Log.i(TAG, "No listener found for " + appId);
+			Log.i(TAG, "No listener found for " + key);
 		}
 	}
 
@@ -539,13 +539,13 @@ public class PbdService extends IPbdService.Stub {
 	* to be called by PbdFramework with app calls OnStop
 	* will remove the location listener
 	*/
-	public void onStop(String appId){
+	public void onStop(String key){
 
 		Log.i(TAG, "Called PbdService onStop");
-		Log.i(TAG, "Searching for listener with appid " + appId);
+		Log.i(TAG, "Searching for listener with key " + key);
 
 		//Find listnerNo of calling app
-		int listenerNo = searchListenerList(appId);
+		int listenerNo = searchListenerList(key);
 
 		Log.i(TAG, "Listener was found at location: " + listenerNo);
 
@@ -567,7 +567,7 @@ public class PbdService extends IPbdService.Stub {
 			}
 		}
 		else{
-			Log.i(TAG, "No listener found for " + appId);
+			Log.i(TAG, "No listener found for " + key);
 		}
 	}
 
@@ -617,11 +617,11 @@ public class PbdService extends IPbdService.Stub {
 	* MyLocationListener within the Listenerlist
 	* returns -1 if not in list
 	*/
-	private int searchListenerList(String _appId){
-		Log.i(TAG, "into searchListenerlist with appid: " + _appId);
+	private int searchListenerList(String key){
+		Log.i(TAG, "into searchListenerlist with key: " + key);
 		int s = listenerList.size();
 		for(int i = 0; i < listenerList.size(); i++){
-			if ((listenerList.get(i).getAppId()).equals(_appId)){
+			if ((listenerList.get(i).getKey()).equals(key)){
 				return i;
 			}
 		}
@@ -648,22 +648,22 @@ public class PbdService extends IPbdService.Stub {
 
 		//The id of the calling app is stored as a string
 		// and initialized by the MyLocationListener constuctor
-		private String appId;
+		private String key;
 		private String listenerId;
 		private String provider;
 		private Boolean updateAvailable;
 		private Boolean replication;
 
 
-		public MyLocationListener(String _appId, String _listenerId){
-			appId = _appId;
+		public MyLocationListener(String _key, String _listenerId){
+			key = _key;
 			listenerId = _listenerId;
 			provider = null;
 			updateAvailable = false;
 			// If replication is granted, location data will be replicated to
 			// to the central database.
 			try{
-				JSONObject dpa = dpaReader(_appId);
+				JSONObject dpa = dpaReader(_key);
 				if(dpa.getString("Replication").equals("granted"))
 					replication = true;
 				else 
@@ -672,11 +672,11 @@ public class PbdService extends IPbdService.Stub {
 		}
 
 		/*
-		* getAppId
-		* Accessor function for the AppId
+		* getKey
+		* Accessor function for the Key
 		*/
-		public String getAppId(){
-			return this.appId;
+		public String getKey(){
+			return this.key;
 		}
 
 		/*
@@ -758,7 +758,7 @@ public class PbdService extends IPbdService.Stub {
 
 			Log.i(TAG, "Broadcasting Intent to CDB");
 			Intent intent2 = new Intent("pbd1234");
-			intent2.putExtra("appid", appId);
+			intent2.putExtra("key", key);
 			intent2.putExtra("updateType", updateType);
 			mContext.sendBroadcast(intent2);
 		}
@@ -791,18 +791,18 @@ public class PbdService extends IPbdService.Stub {
 	* Returns a Uri of all contacts from Contacts.Contract
 	* 
 	*/
-	public Uri getContacts(String appId){
-		Log.i(TAG, "into getContacts: " + appId);
+	public Uri getContacts(String key){
+		Log.i(TAG, "into getContacts: " + key);
 		int resultCode;
 		//Attempt authentication and return string accordingly
 		if (pbdAuthentication){
-			resultCode = authenticateContact(appId, "contacts");
+			resultCode = authenticateContact(key, "contacts");
 			if (resultCode == 1)
 				return null;
 			else if (resultCode == 2)
 				return null;
 		}
-		Log.i(TAG, "Voice Mail number granted to " + appId);
+		Log.i(TAG, "Voice Mail number granted to " + key);
 		return ContactsContract.Contacts.CONTENT_URI;
 	}
 
@@ -811,12 +811,12 @@ public class PbdService extends IPbdService.Stub {
 	* Returns a Uri of the Row Id column 
 	* from the Contacts Provider
 	*/
-	public String getRowId(String appId){
-		Log.i(TAG, "into getRowId: " + appId);
+	public String getRowId(String key){
+		Log.i(TAG, "into getRowId: " + key);
 		int resultCode;
 		//Attempt authentication and return string accordingly
 		if (pbdAuthentication){
-			resultCode = authenticateContact(appId, "rowId");
+			resultCode = authenticateContact(key, "rowId");
 			if (resultCode == 1)
 				return "refused";
 			else if (resultCode == 2)
@@ -830,12 +830,12 @@ public class PbdService extends IPbdService.Stub {
 	* Returns a Uri of the Display Name column
 	* from the Contacts Provider
 	*/
-	public String getDisplayName(String appId){
-		Log.i(TAG, "into getDisplayName: " + appId);
+	public String getDisplayName(String key){
+		Log.i(TAG, "into getDisplayName: " + key);
 		int resultCode;
 		//Attempt authentication and return string accordingly
 		if (pbdAuthentication){
-			resultCode = authenticateContact(appId, "displayName");
+			resultCode = authenticateContact(key, "displayName");
 			if (resultCode == 1)
 				return "refused";
 			else if (resultCode == 2)
@@ -849,12 +849,12 @@ public class PbdService extends IPbdService.Stub {
 	* Returns a Uri of ''Has Phone Number' colum
 	* from the Contacts Provider
 	*/
-	public String getHasPhoneNumber(String appId){
-		Log.i(TAG, "into getHasPhoneNumber: " + appId);
+	public String getHasPhoneNumber(String key){
+		Log.i(TAG, "into getHasPhoneNumber: " + key);
 		int resultCode;
 		//Attempt authentication and return string accordingly
 		if (pbdAuthentication){
-			resultCode = authenticateContact(appId, "hasPhoneNumber");
+			resultCode = authenticateContact(key, "hasPhoneNumber");
 			if (resultCode == 1)
 				return "refused";
 			else if (resultCode == 2)
@@ -867,12 +867,12 @@ public class PbdService extends IPbdService.Stub {
 	* getCdkPhoneContentUri
 	* Returns CommonDataKinds Phone Content Uri
 	*/
-	public Uri getCdkPhoneContentUri(String appId){
-		Log.i(TAG, "into getCdkPhoneContentUri: " + appId);
+	public Uri getCdkPhoneContentUri(String key){
+		Log.i(TAG, "into getCdkPhoneContentUri: " + key);
 		int resultCode;
 		//Attempt authentication and return string accordingly
 		if (pbdAuthentication){
-			resultCode = authenticateContact(appId, "cdkPhoneContentUri");
+			resultCode = authenticateContact(key, "cdkPhoneContentUri");
 			if (resultCode == 1)
 				return null;
 			else if (resultCode == 2)
@@ -885,12 +885,12 @@ public class PbdService extends IPbdService.Stub {
 	* getCdkPhoneContactId
 	* Returns String of CommonDataKinds Phone Contact Id
 	*/
-	public String getCdkPhoneContactId (String appId){
-		Log.i(TAG, "into getCdkPhoneContactId: " + appId);
+	public String getCdkPhoneContactId (String key){
+		Log.i(TAG, "into getCdkPhoneContactId: " + key);
 		int resultCode;
 		//Attempt authentication and return string accordingly
 		if (pbdAuthentication){
-			resultCode = authenticateContact(appId, "cdkPhoneContactId");
+			resultCode = authenticateContact(key, "cdkPhoneContactId");
 			if (resultCode == 1)
 				return "refused";
 			else if (resultCode == 2)
@@ -903,12 +903,12 @@ public class PbdService extends IPbdService.Stub {
 	* getCdkPhoneNumber
 	* Returns String of CommonDataKinds Phone Number
 	*/
-	public String getCdkPhoneNumber (String appId){
-		Log.i(TAG, "into getCdkPhoneNumber: " + appId);
+	public String getCdkPhoneNumber (String key){
+		Log.i(TAG, "into getCdkPhoneNumber: " + key);
 		int resultCode;
 		//Attempt authentication and return string accordingly
 		if (pbdAuthentication){
-			resultCode = authenticateContact(appId, "cdkPhoneNumber");
+			resultCode = authenticateContact(key, "cdkPhoneNumber");
 			if (resultCode == 1)
 				return "refused";
 			else if (resultCode == 2)
@@ -925,9 +925,9 @@ public class PbdService extends IPbdService.Stub {
      * Used by authentication methods to read DPA
      * and return it as a Json Object
      */	
-     private JSONObject dpaReader(String appId) throws Exception{
+     private JSONObject dpaReader(String key) throws Exception{
 
-     	String filename = "/data/data/"+appId+".DPA.json";
+     	String filename = "/data/data/"+key+".DPA.json";
      	InputStream fin = new FileInputStream(filename);
 		BufferedReader reader = new BufferedReader(new InputStreamReader(fin));
 		StringBuilder sb = new StringBuilder();
@@ -944,8 +944,8 @@ public class PbdService extends IPbdService.Stub {
 		return dpa;
      }
 
-     private void dpaWriter(String appId, JSONObject dpa) throws Exception{
-     	String filename = "/data/data/"+appId+".DPA.json";
+     private void dpaWriter(String key, JSONObject dpa) throws Exception{
+     	String filename = "/data/data/"+key+".DPA.json";
 
      	// put JSON object back into the file.
 		String new_dpa_str = dpa.toString(4);
@@ -988,15 +988,15 @@ public class PbdService extends IPbdService.Stub {
      * returns 1 if request refused
      * returns 2 if there is a error in request process
      */	
-	private int authenticateLocationUpdates(String appId, String scope){
-		Log.i(TAG, "authenticate location updates with appId: " + appId + " scope: " + scope);
+	private int authenticateLocationUpdates(String key, String scope){
+		Log.i(TAG, "authenticate location updates with key: " + key + " scope: " + scope);
 
 		// Read in the contents in the DPA file
 		JSONObject dpa;
 		JSONObject location;
 		JSONObject locationScope;
 		try{
-			dpa = dpaReader(appId);
+			dpa = dpaReader(key);
 			location = dpa.getJSONObject("Location");
 			locationScope = location.getJSONObject(scope);
 		}catch(Exception e){
@@ -1019,7 +1019,7 @@ public class PbdService extends IPbdService.Stub {
 		        	last_accessed.getYear() != now.getYear()){
 
 		        	locationScope.put("Used", 0);
-		        	dpaWriter(appId, dpa);
+		        	dpaWriter(key, dpa);
 		        	Log.d(TAG, "It's a new day, so reset counter!");
 	        	}
 			}
@@ -1043,14 +1043,14 @@ public class PbdService extends IPbdService.Stub {
      * returns 1 if request refused
      * returns 2 if there is a error in request process
      */	
-	private int authenticateIdentifier(String appId, String scope){
-		Log.i(TAG, "authenticate Identifier with appId: " + appId + " scope: " + scope);	
+	private int authenticateIdentifier(String key, String scope){
+		Log.i(TAG, "authenticate Identifier with key: " + key + " scope: " + scope);	
 
 		// Read in the contents in the DPA file
 		JSONObject dpa;
 		JSONObject identifier;
 		try{
-			dpa = dpaReader(appId);
+			dpa = dpaReader(key);
 			identifier = dpa.getJSONObject("Identifier");
 		}catch(Exception e){
 			Log.e(TAG, "Error in parsing the DPA file",e);
@@ -1084,15 +1084,15 @@ public class PbdService extends IPbdService.Stub {
      * returns 1 if request refused
      * returns 2 if there is a error in request process
      */	
-	private int authenticateContact(String appId, String scope){
-		Log.i(TAG, "authenticate contact with appId: " + appId + " scope: " + scope);	
+	private int authenticateContact(String key, String scope){
+		Log.i(TAG, "authenticate contact with key: " + key + " scope: " + scope);	
 
 		// Read in the contents in the DPA file
 		JSONObject dpa;
 		JSONObject contact;
 
 		try{
-			dpa = dpaReader(appId);
+			dpa = dpaReader(key);
 			contact = dpa.getJSONObject("Contact");
 		}catch(Exception e){
 			Log.e(TAG, "Error reading the DPA file",e);

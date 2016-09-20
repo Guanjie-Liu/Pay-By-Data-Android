@@ -1,16 +1,17 @@
 {
   "AppId":"com.example.jack.pbdtrial",
+  "Key": "pbdtrial_key123",
   "Duration": 100,
   "Replication": "granted",
   "Location":
   {
     "finelocation":
     {
-      "Frequency":100
+      "Frequency":50
     },
     "coarselocation":
     {
-      "Frequency":100
+      "Frequency":10
     }
   },
   "Identifier":

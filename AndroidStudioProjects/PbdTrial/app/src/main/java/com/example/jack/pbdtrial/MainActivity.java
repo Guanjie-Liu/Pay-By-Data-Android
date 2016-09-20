@@ -7,57 +7,53 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.location.Location;
 import android.location.LocationListener;
+import android.location.LocationManager;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.Toast;
 
 import android.os.PbdManager;
-import android.os.DpaManager;
 import android.os.PbdLocation;
 
 public class MainActivity extends Activity implements LocationListener {
     public static final String TAG = "PbdTrial";
+    private static final String KEY = "pbdtrial_key123";
     private PbdManager pbdmanager;
-    private DpaManager dpamanager;
     private MyReceiver receiver;
-    private Context mcontext;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        mcontext = getApplicationContext();
-
         pbdmanager = (PbdManager) getSystemService(Context.PBD_SERVICE);
         Log.d(TAG, "created pbdDeviceManager");
-        Toast.makeText(getApplicationContext(), "Requesting Device and Telephony information" ,Toast.LENGTH_LONG).show();
+        Toast.makeText(getApplicationContext(), "Requesting Device and Telephony information" ,Toast.LENGTH_SHORT).show();
 
-        String id = pbdmanager.getDeviceId(this);
+        String id = pbdmanager.getDeviceId(KEY);
         Toast.makeText(getApplicationContext(), "Device id returned: " + id ,Toast.LENGTH_SHORT).show();
 
 
-        String simId = pbdmanager.getSimSerialNumber(this);
+        String simId = pbdmanager.getSimSerialNumber(KEY);
         Toast.makeText(getApplicationContext(), "Sim id returned: " + simId ,Toast.LENGTH_SHORT).show();
 
 
-        String androidId = pbdmanager.getAndroidId(this);
+        String androidId = pbdmanager.getAndroidId(KEY);
         Toast.makeText(getApplicationContext(), "Android id returned: " + androidId , Toast.LENGTH_SHORT).show();
 
         //////////////////////////////////////////////////////////////////////
 
         Log.d(TAG, "about to set up broadcast receiver");
 
-        Toast.makeText(getApplicationContext(), "Requesting GPS Location updates every 3 seconds" ,Toast.LENGTH_LONG).show();
-        //String listenerId = pbdLocManager.requestSingleUpdate(PbdLocationManager.FINE_LOCATION);
-
+        Toast.makeText(getApplicationContext(), "Requesting GPS Location updates every 3 seconds" ,Toast.LENGTH_SHORT).show();
         //timings = new TimingLogger(TAG, "LocationManager");
         //timings2 = new TimingLogger(TAG, "PbdLocationManager");
 
-        // locMgr = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
-        // locMgr.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, this);
-        String listenerId = pbdmanager.requestLocationUpdates(this, 0, 0, PbdManager.FINE_LOCATION);
-        Toast.makeText(getApplicationContext(), "Listener Id: " + listenerId ,Toast.LENGTH_LONG).show();
+//        LocationManager locMgr;
+//        locMgr = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+//        locMgr.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, this);
+        String listenerId = pbdmanager.requestLocationUpdates(KEY, 2000, 0, PbdManager.FINE_LOCATION);
+        Toast.makeText(getApplicationContext(), "Listener Id: " + listenerId ,Toast.LENGTH_SHORT).show();
         Log.d(TAG, "requested updates");
 
         IntentFilter filter = new IntentFilter(listenerId);
@@ -68,17 +64,16 @@ public class MainActivity extends Activity implements LocationListener {
     }
 
     @Override
-    public void onLocationChanged(Location pbdLoc) {
+    public void onLocationChanged(Location Loc) {
         Log.d(TAG, "Location Manager receive an intent");
     	/*locMgr_count++;
         timings.addSplit(Integer.toString(locMgr_count));
         timings.dumpToLog();*/
 
-        double lat = pbdLoc.getLatitude();
-        double lon = pbdLoc.getLongitude();
-        String l = "Pbd Longitude: " + lon + " Latitude: " + lat;
+        double lat = Loc.getLatitude();
+        double lon = Loc.getLongitude();
+        String l = "Longitude: " + lon + " Latitude: " + lat;
         Toast.makeText(getApplicationContext(), l ,Toast.LENGTH_SHORT).show();
-        Log.d(TAG, "SUCCESS to call getLoc function");
     }
     @Override
     public void onStatusChanged(String provider, int status, Bundle extras) {}
@@ -92,7 +87,7 @@ public class MainActivity extends Activity implements LocationListener {
         super.onStop();
         //unregister the receiver and call onStop in PbdLocManager
         unregisterReceiver(receiver);
-        pbdmanager.pbdOnStop(this);
+        pbdmanager.pbdOnStop(KEY);
     }
 
     public class MyReceiver extends BroadcastReceiver {
@@ -103,7 +98,7 @@ public class MainActivity extends Activity implements LocationListener {
             Log.d(TAG, "MyReceiver receive an intent");
 
             try{
-                PbdLocation pbdLoc = pbdmanager.getPbdLocation(mcontext);
+                PbdLocation pbdLoc = pbdmanager.getPbdLocation(KEY);
 				/*pbdLocMgr_count++;
 				timings2.addSplit(Integer.toString(pbdLocMgr_count));
 				timings2.dumpToLog();*/
@@ -123,6 +118,42 @@ public class MainActivity extends Activity implements LocationListener {
                 Log.d(TAG, "FAILED to call getLoc function");
                 e.printStackTrace();
             }
+        }
+    }
+
+    public class MockLocationProvider {
+        String providerName;
+        Context ctx;
+
+        public MockLocationProvider(String name, Context ctx) {
+            this.providerName = name;
+            this.ctx = ctx;
+
+            LocationManager lm = (LocationManager) ctx.getSystemService(
+                    Context.LOCATION_SERVICE);
+            lm.addTestProvider(providerName, false, false, false, false, false,
+                    true, true, 0, 5);
+            lm.setTestProviderEnabled(providerName, true);
+        }
+
+        public void pushLocation(double lat, double lon) {
+            LocationManager lm = (LocationManager) ctx.getSystemService(
+                    Context.LOCATION_SERVICE);
+
+            Location mockLocation = new Location(providerName);
+            mockLocation.setLatitude(lat);
+            mockLocation.setLongitude(lon);
+            mockLocation.setAltitude(0);
+            mockLocation.setTime(System.currentTimeMillis());
+            mockLocation.setElapsedRealtimeNanos(System.currentTimeMillis());
+            mockLocation.setAccuracy(2);
+            lm.setTestProviderLocation(providerName, mockLocation);
+        }
+
+        public void shutdown() {
+            LocationManager lm = (LocationManager) ctx.getSystemService(
+                    Context.LOCATION_SERVICE);
+            lm.removeTestProvider(providerName);
         }
     }
 }

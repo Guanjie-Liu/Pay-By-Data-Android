@@ -8,6 +8,7 @@ interface IDpaService {
 /**
 * {@hide}
 */
-	boolean installDPA(String callerAppId, String dpa_str);
-	String readDPA(String callerAppId, String dpaAppId);
+	boolean installDPA(String key, String dpa_str);
+	String readDpaList(String key);
+	String readDpa(String key, String dpaKey);
 }

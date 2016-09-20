@@ -15,54 +15,45 @@ interface IPbdService {
 */
 	//void setValue(int val);
 
-	void onStop(String appId);
+	void onStop(String key);
 
 	String getString();
 
-	String getDeviceId(String appId);
+	String getDeviceId(String key);
 
-	String getSimSerialNumber(String appId);
+	String getSimSerialNumber(String key);
 
-	String getAndroidId(String appId);
+	String getAndroidId(String key);
 
-	String getGroupIdLevel1(String appId);
+	String getGroupIdLevel1(String key);
 
-	String getLine1Number(String appId);
+	String getLine1Number(String key);
 
-	String getSubscriberId(String appId);
+	String getSubscriberId(String key);
 
-	String getVoiceMailAlphaTag(String appId);
+	String getVoiceMailAlphaTag(String key);
 
-	String getVoiceMailNumber(String appId);
+	String getVoiceMailNumber(String key);
 
-	//Location getLoc();
+	PbdLocation getPbdLoc(String key);
 
-	PbdLocation getPbdLoc(String appId);
+	String requestPbdLocationUpdates(long minTime, float minDistance, String key, String provider);
 
-	String requestPbdLocationUpdates(long minTime, float minDistance, String appId, String provider);
+	String requestSingleUpdate(String key, String provider);
 
-	String requestSingleUpdate(String appId, String provider);
+	Uri getContacts(String key);
 
-	Uri getContacts(String appId);
+	String getRowId(String key);
 
-	String getRowId(String appId);
+	String getDisplayName(String key);
 
-	String getDisplayName(String appId);
+	String getHasPhoneNumber(String key);
 
-	String getHasPhoneNumber(String appId);
+	Uri getCdkPhoneContentUri(String key);
 
-	Uri getCdkPhoneContentUri(String appId);
+	String getCdkPhoneContactId (String key);
 
-	String getCdkPhoneContactId (String appId);
+	String getCdkPhoneNumber (String key);
 
-	String getCdkPhoneNumber (String appId);
-
-	void removeLocationUpdates (String appId);
-
-/*	void setIP (String ip);
-
-	String getIP ();
-
-	void clearTokens();
-	*/
+	void removeLocationUpdates (String key);
 }

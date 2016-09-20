@@ -1,8 +1,8 @@
 package com.example.jack.newcentraldatabase;
 
+import android.app.Activity;
 import android.content.Context;
 import android.location.LocationManager;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 
@@ -11,7 +11,7 @@ import com.couchbase.lite.DatabaseOptions;
 import com.couchbase.lite.Manager;
 import com.couchbase.lite.android.AndroidContext;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends Activity {
     public static final String DB_NAME = "central_database";
     public static final String TAG = "DataUpdate";
 

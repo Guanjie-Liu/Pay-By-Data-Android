@@ -13,11 +13,6 @@ import android.util.Log;
 import android.content.Context;
 import android.app.Application;
 
-/*//Imports to use the DpaService
-import android.os.ServiceManager;
-import android.os.IDpaService;*/
-
-
 public final class DpaManager {    
     static {
         /*
@@ -37,11 +32,11 @@ public final class DpaManager {
      * used by PBD app store to install DPA when an app is downloaded
      * return true if installation succeed or false otherwise;
      */
-    public boolean installDPA(Context context, String dpa_str){
+    public boolean installDPA(String key, String dpa_str){
         boolean result = false;
 
         try{
-            result = dpa.installDPA(context.getPackageName(), dpa_str);
+            result = dpa.installDPA(key, dpa_str);
         }catch(Exception e){
             Log.d(TAG, "FAILED to install DPA");
             e.printStackTrace(); 
@@ -50,15 +45,32 @@ public final class DpaManager {
         return result;
     }
 
-    /* readDPA
-     * used by central_database to read the DPA of an app
-     * return the dpa as string if succeed or null otherwise
+    /* readDpaList
+     * used by central_database and PbdAppStore to read the DPA List in the system
+     * return the list as string if succeed or "FAILED" otherwise
      */
-    public String readDPA(Context context, String dpaAppId){
-        String result = "Nothing";
+    public String readDpaList(String key){
+        String result = "FAILED";
 
         try{
-            result = dpa.readDPA(context.getPackageName(), dpaAppId);
+            result = dpa.readDpaList(key);
+        }catch(Exception e){
+            Log.d(TAG, "FAILED to read DPA List");
+            e.printStackTrace();
+        }
+
+        return result;
+    }
+
+    /* readDpa
+     * used by central_database and PbdAppStore to read the DPA of an app
+     * return the dpa as string if succeed or "FAILED" otherwise
+     */
+    public String readDpa(String key, String dpaKey){
+        String result = "FAILED";
+
+        try{
+            result = dpa.readDpa(key, dpaKey);
         }catch(Exception e){
             Log.d(TAG, "FAILED to read DPA");
             e.printStackTrace(); 
@@ -66,5 +78,4 @@ public final class DpaManager {
 
         return result;
     }
-
 }

@@ -8,28 +8,39 @@ import android.os.DpaManager;
 
 // Libraries for installing DPA
 import android.content.res.AssetManager;
+import android.widget.LinearLayout;
+import android.widget.TextView;
+
 import java.io.BufferedReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 
 public class MainActivity extends Activity {
     public static final String TAG = "PbdAppStore";
+    private static final String KEY = "pbdappstore_key123";
 
     private DpaManager dpamanager;
+    private TextView myText = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        try {
-            Context context = createPackageContext("com.example.jack.pbdtrial", CONTEXT_IGNORE_SECURITY);
-            Log.d(TAG, "we created a app context: "+context.getPackageName());
-        }catch(Exception e){
-            e.printStackTrace();
-            Log.e(TAG, "error in creating packageContext");
-        }
-//        installDPA();
+        // install the DPA into the system
+        installDPA();
+
+        // read DPA from the system
+        LinearLayout lView = new LinearLayout(this);
+
+        String dpaKey = "pbdtrial_key123";
+        String dpaString = dpamanager.readDpa(KEY, dpaKey);
+        myText = new TextView(this);
+        myText.setText(dpaString);
+
+        lView.addView(myText);
+        setContentView(lView);
+
     }
 
     // Method used by this app to install its DPA
@@ -56,9 +67,8 @@ public class MainActivity extends Activity {
         }
 
         try{
-            String appId = getApplicationContext().getPackageName();
-            dpamanager.installDPA(this, dpa_str);
-            Log.i(TAG, "My package name:"+appId);
+            dpamanager.installDPA(KEY, dpa_str);
+            Log.i(TAG, "DPA installed");
         }catch(Exception e){
             e.printStackTrace();
             Log.e(TAG, "Error in writing DPA!");

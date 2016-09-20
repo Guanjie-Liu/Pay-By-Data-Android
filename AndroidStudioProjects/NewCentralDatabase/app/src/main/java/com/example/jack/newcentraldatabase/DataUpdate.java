@@ -7,7 +7,6 @@ import android.location.Location;
 import android.location.LocationManager;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
-import android.provider.DocumentsContract;
 import android.util.Log;
 
 import com.couchbase.lite.CouchbaseLiteException;
@@ -20,12 +19,9 @@ import com.couchbase.lite.replicator.Replication;
 
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 
 public class DataUpdate extends IntentService {
 
@@ -77,40 +73,17 @@ public class DataUpdate extends IntentService {
 
         if (intent != null) {
             final String action = intent.getAction();
-            final String appId = intent.getExtras().getString("appid");
 
             if (ACTION_FINE_LOC.equals(action)) {
                 Location location = locMgr.getLastKnownLocation(LocationManager.GPS_PROVIDER);
-                try{
-                    double lat = location.getLatitude();
-                    double lon = location.getLongitude();
-                    String l = appId + " gets us LocationManager Longitude: " + lon + " Latitude: " + lat;
-                    Log.d(TAG, l);
-                }
-                catch (Exception e){
-                    Log.d(TAG, "FAILED to get location");
-                    e.printStackTrace();
-                }
-
                 updateDoc(database, location);
-                outputContents(database, appId);
             }
             else if (ACTION_COARSE_LOC.equals(action)) {
                 Location location = locMgr.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
-                try{
-                    double lat = location.getLatitude();
-                    double lon = location.getLongitude();
-                    String l = "LocationManager Longitude: " + lon + " Latitude: " + lat;
-                    Log.d(TAG, l);
-
-                }
-                catch (Exception e){
-                    Log.d(TAG, "FAILED to get location");
-                    e.printStackTrace();
-                }
+                updateDoc(database, location);
             }
             else{
-                Log.d(TAG, "No action handle for " + action);
+                Log.d(TAG, "No action handler for " + action);
             }
             try {
                 // synchronize the database only when the device is connected to internet
@@ -140,86 +113,13 @@ public class DataUpdate extends IntentService {
             properties.put("Time", loc.getTime());
 
             //  time to live each location data is 12 Hrs
-            Date ttl = new Date(System.currentTimeMillis() + 86400000/2);
+            Date ttl = new Date(System.currentTimeMillis() + 86400000);
             Document document = database.createDocument();
             document.putProperties(properties);
             document.setExpirationDate(ttl);
         }catch (Exception e){
             Log.e(TAG, "Error updating document", e);
         }
-
-        /*
-        // Store location as JSON object array
-        Document document = database.getDocument(documentId);
-        try {
-            Map<String, Object> updatedProperties = new HashMap<>();
-            ArrayList<Map<String, Object>> locations = new ArrayList<>();
-            Map<String, Object> location = new HashMap<>();
-            location.put("Latitude", loc.getLatitude());
-            location.put("Longitude", loc.getLongitude());
-            location.put("Accuracy", loc.getAccuracy());
-            location.put("Time", loc.getTime());
-            // If the document is NOT empty
-            if(document.getProperties() != null) {
-                // Retrieve the original data first if document is not empty
-                updatedProperties.putAll(document.getProperties());
-                // Retrieve the original location data if it exists.
-                if(updatedProperties.containsKey("Location")){
-                    locations = (ArrayList<Map<String, Object>>) updatedProperties.get("Location");
-                }
-            }
-            // update document with new data
-            locations.add(location);
-            updatedProperties.put("Location", locations);
-            document.putProperties(updatedProperties);
-            Log.d(TAG, "Document updated");
-        }catch (CouchbaseLiteException e) {
-            Log.e(TAG, "Error updating document", e);
-        }*/
-
-/*
-// Store location in arrays
-        try {
-            Map<String, Object> updatedProperties = new HashMap<String, Object>();
-            Map<String, ArrayList> location = new HashMap<String, ArrayList>();
-
-            ArrayList latitude = new ArrayList();
-            ArrayList longitude = new ArrayList();
-
-            // If the document is empty
-            if(document.getProperties() == null) {
-
-                // update document with new data
-                latitude.add(loc.getLatitude());
-                longitude.add(loc.getLongitude());
-                location.put("Latitude", latitude);
-                location.put("Longitude", longitude);
-                updatedProperties.put("Location", location);
-            }
-            else{
-                // Retrieve the original data first if document is not empty
-                updatedProperties.putAll(document.getProperties());
-                // Retrieve the original location data if it exists.
-                if(updatedProperties.containsKey("Location")){
-                    location = (Map<String, ArrayList>) updatedProperties.get("Location");
-                    latitude = location.get("Latitude");
-                    longitude = location.get("Longitude");
-                }
-                // update document with new data
-                latitude.add(loc.getLatitude());
-                longitude.add(loc.getLongitude());
-                location.put("Latitude", latitude);
-                location.put("Longitude", longitude);
-                updatedProperties.put("Location", location);
-            }
-            // Save data to the local Couchbase Lite DB
-            document.putProperties(updatedProperties);
-            Log.d(TAG, "Document updated");
-        }catch (CouchbaseLiteException e) {
-            Log.e(TAG, "Error updating document", e);
-        }
-        */
-
     }
 
     private void outputContents(Database database, String documentId) {
@@ -241,7 +141,7 @@ public class DataUpdate extends IntentService {
 
     private URL createSyncURL(boolean isEncrypted) {
         URL syncURL = null;
-        String host = "http://146.179.201.244";
+        String host = "http://129.31.179.34";
         String port = "4984";
         String dbName = "central_database";
         try {
